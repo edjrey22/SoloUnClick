@@ -1,0 +1,272 @@
+@model SoloUnClick.web.Models.ViewModels.PaquetesBusquedaViewModel
+@using SoloUnClick.Domain.Enums
+@using X.PagedList.Mvc.Core
+@{
+    ViewData["Title"] = "Buscar Paquetes Turísticos";
+}
+
+<div class="container my-4">
+    <!-- Encabezado y Formulario de Búsqueda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold mb-3">
+                <i class="bi bi-search me-2"></i>Buscar Paquetes Turísticos
+            </h1>
+            
+            <!-- Panel de Filtros -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <form method="get" asp-action="Index" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="busqueda" class="form-label fw-bold">
+                                <i class="bi bi-geo-alt me-1"></i>Ubicación o Destino
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="busqueda" 
+                                   name="busqueda" 
+                                   placeholder="Ej: Cusco, Lima, Arequipa..."
+                                   value="@Model.Busqueda">
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="tipoViaje" class="form-label fw-bold">
+                                <i class="bi bi-tag me-1"></i>Tipo de Viaje
+                            </label>
+                            <select class="form-select" id="tipoViaje" name="tipoViaje">
+                                <option value="">Todos</option>
+                                @foreach (TipoViaje tipo in Enum.GetValues(typeof(TipoViaje)))
+                                {
+                                    <option value="@((int)tipo)" selected="@(Model.TipoViaje == tipo)">
+                                        @tipo.ToString()
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="precioMax" class="form-label fw-bold">
+                                <i class="bi bi-currency-dollar me-1"></i>Precio Máximo
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="precioMax" 
+                                   name="precioMax" 
+                                   placeholder="S/ 0.00"
+                                   step="0.01"
+                                   min="0"
+                                   value="@Model.PrecioMax">
+                        </div>
+                        
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-funnel me-1"></i>Filtrar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    @if (!string.IsNullOrEmpty(Model.Busqueda) || Model.TipoViaje.HasValue || Model.PrecioMax.HasValue)
+                    {
+                        <div class="mt-3">
+                            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-x-circle me-1"></i>Limpiar filtros
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resultados de Búsqueda -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    @if (Model.Paquetes != null && Model.Paquetes.Any())
+                    {
+                        <span class="badge bg-success">@Model.TotalResultados</span>
+                        <span class="ms-2">paquetes encontrados</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No se encontraron resultados</span>
+                    }
+                </h5>
+                
+                @if (Model.Paquetes != null && Model.Paquetes.Any())
+                {
+                    <div class="text-muted small">
+                        Página @Model.Paquetes.PageNumber de @Model.Paquetes.PageCount
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    @if (Model.Paquetes != null && Model.Paquetes.Any())
+    {
+        <!-- Listado de Paquetes -->
+        <div class="row g-4 mb-4">
+            @foreach (var paquete in Model.Paquetes)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <!-- Imagen del paquete -->
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(paquete.RutaImagenPrincipal))
+                            {
+                                <img src="@paquete.RutaImagenPrincipal" 
+                                     class="card-img-top" 
+                                     alt="@paquete.Nombre" 
+                                     style="height: 220px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 220px;">
+                                    <i class="bi bi-image text-secondary" style="font-size: 4rem;"></i>
+                                </div>
+                            }
+                            
+                            <!-- Badge del tipo de viaje -->
+                            <span class="position-absolute top-0 start-0 m-2 badge bg-primary">
+                                @paquete.TipoViaje
+                            </span>
+                        </div>
+                        
+                        <!-- Contenido de la tarjeta -->
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">@paquete.Nombre</h5>
+                            
+                            <p class="card-text text-muted mb-2">
+                                <i class="bi bi-geo-alt text-danger me-1"></i>
+                                @paquete.Ubicacion
+                            </p>
+                            
+                            <p class="card-text text-muted mb-2">
+                                <i class="bi bi-map text-success me-1"></i>
+                                Región: @paquete.Region
+                            </p>
+                            
+                            <p class="card-text text-muted mb-2">
+                                <i class="bi bi-calendar-event text-info me-1"></i>
+                                Duración: @paquete.DuracionDias días
+                            </p>
+                            
+                            <p class="card-text small text-muted">
+                                @{
+                                    var descripcionCorta = paquete.DescripcionDetallada.Length > 100 
+                                        ? paquete.DescripcionDetallada.Substring(0, 100) + "..." 
+                                        : paquete.DescripcionDetallada;
+                                }
+                                @descripcionCorta
+                            </p>
+                        </div>
+                        
+                        <!-- Footer con precio y botón -->
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block">Desde</span>
+                                    <h4 class="text-primary fw-bold mb-0">
+                                        S/ @paquete.PrecioPorPersona.ToString("N2")
+                                    </h4>
+                                    <span class="text-muted small">por persona</span>
+                                </div>
+                                <a asp-action="Details" 
+                                   asp-route-id="@paquete.Id" 
+                                   class="btn btn-primary">
+                                    Ver Detalle
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <!-- Paginación -->
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="Paginación de paquetes">
+                    @Html.PagedListPager(Model.Paquetes, 
+                        page => Url.Action("Index", new 
+                        { 
+                            pagina = page, 
+                            busqueda = Model.Busqueda, 
+                            tipoViaje = Model.TipoViaje,
+                            precioMax = Model.PrecioMax 
+                        }),
+                        new PagedListRenderOptions
+                        {
+                            LiElementClasses = new[] { "page-item" },
+                            PageClasses = new[] { "page-link" },
+                            UlElementClasses = new[] { "pagination", "justify-content-center" },
+                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            LinkToFirstPageFormat = "Primera",
+                            LinkToPreviousPageFormat = "Anterior",
+                            LinkToNextPageFormat = "Siguiente",
+                            LinkToLastPageFormat = "Última"
+                        })
+                </nav>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Mensaje cuando no hay resultados -->
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted mb-3 d-block"></i>
+                    <h4>No se encontraron paquetes turísticos</h4>
+                    <p class="mb-3">Intenta modificar tus criterios de búsqueda</p>
+                    <a asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-arrow-left me-2"></i>Ver todos los paquetes
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Error"]
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <style>
+        .hover-card {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+        }
+        
+        .page-link {
+            color: #667eea;
+        }
+        
+        .page-item.active .page-link {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+    </style>
+}

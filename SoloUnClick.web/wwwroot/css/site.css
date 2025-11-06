@@ -1,0 +1,211 @@
+/* ===== BASE STYLES ===== */
+html {
+  font-size: 14px;
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa, como mínimo, toda la altura de la pantalla */
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== STICKY FOOTER ===== */
+/* Main crece para empujar el footer al final */
+main {
+  flex-grow: 1; /* ¡Línea clave! Hace que el contenido principal crezca y empuje el footer */
+  width: 100%;
+  padding-bottom: 2rem; /* Espaciado visual antes del footer */
+}
+
+/* Footer no se encoge */
+footer {
+  flex-shrink: 0; /* Evita que el footer se encoja */
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+/* Header tampoco se encoge */
+header {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+/* ===== FORM STYLES ===== */
+.btn:focus, 
+.btn:active:focus, 
+.btn-link.nav-link:focus, 
+.form-control:focus, 
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.form-floating > .form-control-plaintext::placeholder, 
+.form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, 
+.form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* ===== NAVIGATION STYLES ===== */
+/* Ocultar enlaces principales de navegación en páginas de autenticación */
+body.auth-page .main-nav-links {
+  display: none !important;
+}
+
+/* En móviles, ocultar también en el menú colapsado */
+@media (max-width: 576px) {
+  body.auth-page .navbar-collapse .main-nav-links {
+    display: none !important;
+  }
+}
+
+/* ===== FOOTER RESPONSIVE STYLES ===== */
+.footer .container {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 767px) {
+  .footer .container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .footer h5,
+  .footer h6 {
+    font-size: 1rem;
+  }
+  
+  .footer .small {
+    font-size: 0.85rem;
+  }
+  
+  .footer .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .footer [class*="col-"] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Enlaces del footer con efecto hover */
+.footer .hover-link {
+  transition: color 0.2s ease;
+}
+
+.footer .hover-link:hover {
+  color: var(--bs-primary) !important;
+}
+
+/* Links sociales con efecto hover */
+.footer .social-link {
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.footer .social-link:hover {
+  color: var(--bs-primary) !important;
+  transform: translateY(-2px);
+}
+
+/* ===== AUTHENTICATION PAGES STYLES ===== */
+.auth-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.auth-card {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 576px) {
+  .auth-container {
+    padding: 1rem 0;
+    min-height: 300px;
+  }
+  
+  .auth-card {
+    margin: 0 1rem;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.section-spacing {
+  padding: 3rem 0;
+}
+
+@media (max-width: 767px) {
+  .section-spacing {
+    padding: 2rem 0;
+  }
+}
+
+.soft-shadow {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* ===== RESPONSIVE CONTAINER ADJUSTMENTS ===== */
+@media (max-width: 576px) {
+  .container,
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* ===== NAVBAR RESPONSIVE FIXES ===== */
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+  
+  .navbar-nav .nav-link {
+    padding: 0.5rem 0;
+  }
+}
+
+/* ===== PREVENIR SCROLL HORIZONTAL ===== */
+body, html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* ===== ASEGURAR QUE EL CONTENIDO NO DESBORDE ===== */
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+a:focus,
+button:focus {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+}

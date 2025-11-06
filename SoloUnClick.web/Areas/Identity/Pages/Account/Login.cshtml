@@ -1,0 +1,142 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "_Layout";
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Agregar clase al body para ocultar navegación principal
+        document.body.classList.add('auth-page');
+    </script>
+    
+    <style>
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .form-floating > label {
+            padding-left: 2rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+            transition: all 0.3s ease;
+        }
+        
+        .auth-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .auth-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+    </style>
+}
+
+<div class="container auth-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6">
+            <div class="card soft-shadow">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="auth-icon">
+                            <i class="bi bi-box-arrow-in-right text-white" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold mb-2">Bienvenido de Nuevo</h2>
+                        <p class="auth-subtitle mb-0">Inicia sesión para continuar tu aventura</p>
+                    </div>
+
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="correo@ejemplo.com" />
+                            <label asp-for="Input.Email">
+                                <i class="bi bi-envelope me-1"></i>Correo Electrónico
+                            </label>
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" placeholder="contraseña" />
+                            <label asp-for="Input.Password">
+                                <i class="bi bi-lock me-1"></i>Contraseña
+                            </label>
+                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            <label class="form-check-label" asp-for="Input.RememberMe">
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mb-3">
+                            <button id="login-submit" type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="mb-2">
+                                <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none small text-muted">
+                                    <i class="bi bi-question-circle me-1"></i>¿Olvidaste tu contraseña?
+                                </a>
+                            </div>
+                            <div>
+                                <span class="text-muted small">¿No tienes cuenta?</span>
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold">
+                                    Regístrate aquí
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <div class="card mt-3 soft-shadow">
+                    <div class="card-body p-4">
+                        <h6 class="card-title text-center mb-3 text-muted">O inicia sesión con</h6>
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div class="d-grid gap-2">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-outline-secondary" name="provider" value="@provider.Name" title="Iniciar sesión con @provider.DisplayName">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>@provider.DisplayName
+                                    </button>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+@model IEnumerable<SoloUnClick.Domain.Entities.Reserva>
+@{
+    ViewData["Title"] = "Mis Reservas";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold mb-3">
+                <i class="bi bi-calendar-check text-primary me-2"></i>Mis Reservas
+            </h1>
+            <p class="text-muted">Aquí puedes ver todas tus reservas realizadas</p>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="px-4">Número</th>
+                                        <th>Paquete</th>
+                                        <th>Fecha de Viaje</th>
+                                        <th>Pasajeros</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var reserva in Model)
+                                    {
+                                        var estadoClase = reserva.FechaViaje > DateTime.Now ? "success" : "secondary";
+                                        var estadoTexto = reserva.FechaViaje > DateTime.Now ? "Próximo" : "Completado";
+                                        var estadoIcon = reserva.FechaViaje > DateTime.Now ? "calendar-event" : "check-circle";
+
+                                        <tr>
+                                            <td class="px-4">
+                                                <strong>#@reserva.Id.ToString("D6")</strong>
+                                                <br>
+                                                <small class="text-muted">
+                                                    @reserva.FechaReserva.ToString("dd/MM/yyyy")
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold">Paquete #@reserva.PaqueteTuristicoId</span>
+                                            </td>
+                                            <td>
+                                                <i class="bi bi-calendar3 text-primary me-1"></i>
+                                                @reserva.FechaViaje.ToString("dd/MM/yyyy")
+                                            </td>
+                                            <td>
+                                                <i class="bi bi-people text-info me-1"></i>
+                                                @reserva.NumeroPasajeros
+                                            </td>
+                                            <td>
+                                                <strong class="text-primary">S/ @reserva.PrecioTotal.ToString("N2")</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-@estadoClase">
+                                                    <i class="bi bi-@estadoIcon me-1"></i>@estadoTexto
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a asp-action="Confirmacion" asp-route-id="@reserva.Id" 
+                                                   class="btn btn-sm btn-outline-primary"
+                                                   title="Ver Detalles">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-sm text-center py-5">
+                    <div class="card-body">
+                        <i class="bi bi-inbox text-muted mb-4" style="font-size: 5rem;"></i>
+                        <h4 class="fw-bold mb-3">No tienes reservas aún</h4>
+                        <p class="text-muted mb-4">
+                            Explora nuestros paquetes turísticos y reserva tu próxima aventura
+                        </p>
+                        <a asp-controller="Paquetes" asp-action="Index" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search me-2"></i>Explorar Paquetes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+}

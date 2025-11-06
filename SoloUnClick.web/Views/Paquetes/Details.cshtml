@@ -1,0 +1,358 @@
+@model SoloUnClick.web.Models.ViewModels.PaqueteDetalleViewModel
+@{
+    ViewData["Title"] = Model.Paquete.Nombre;
+}
+
+<div class="container my-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Paquetes" asp-action="Index">Paquetes</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Paquete.Nombre</li>
+        </ol>
+    </nav>
+    
+    <!-- Mensajes de notificación -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle me-2"></i>@TempData["Warning"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    <!-- Contenido Principal -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Imagen Principal -->
+            <div class="card mb-4 shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.Paquete.RutaImagenPrincipal))
+                {
+                    <img src="@Model.Paquete.RutaImagenPrincipal" class="card-img-top" alt="@Model.Paquete.Nombre" style="height: 450px; object-fit: cover;">
+                }
+                else
+                {
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 450px;">
+                        <i class="bi bi-image text-secondary" style="font-size: 8rem;"></i>
+                    </div>
+                }
+            </div>
+            
+            <!-- Información del Paquete -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge bg-primary mb-2">@Model.Paquete.TipoViaje</span>
+                            <h1 class="fw-bold mb-0">@Model.Paquete.Nombre</h1>
+                        </div>
+                        @if (Model.TotalOpiniones > 0)
+                        {
+                            <div class="text-end">
+                                <div class="text-warning fs-5">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Round(Model.CalificacionPromedio))
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else if (i - 0.5 <= Model.CalificacionPromedio)
+                                        {
+                                            <i class="bi bi-star-half"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star"></i>
+                                        }
+                                    }
+                                </div>
+                                <small class="text-muted">@Model.CalificacionPromedio.ToString("F1") (@Model.TotalOpiniones opiniones)</small>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-geo-alt text-danger fs-4 me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Ubicación</small>
+                                    <strong>@Model.Paquete.Ubicacion</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-map text-success fs-4 me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Región</small>
+                                    <strong>@Model.Paquete.Region</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event text-info fs-4 me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Duración</small>
+                                    <strong>@Model.Paquete.DuracionDias días</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4 class="fw-bold mb-3">Descripción</h4>
+                    <p class="text-justify">@Model.Paquete.DescripcionDetallada</p>
+                </div>
+            </div>
+
+            <!-- Sección de Opiniones -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-4">
+                        <i class="bi bi-star-fill text-warning me-2"></i>Opiniones de Viajeros
+                        @if (Model.TotalOpiniones > 0)
+                        {
+                            <span class="badge bg-primary">@Model.TotalOpiniones</span>
+                        }
+                    </h4>
+                    
+                    @if (Model.Opiniones.Any())
+                    {
+                        <div class="opiniones-list">
+                            @foreach (var opinion in Model.Opiniones)
+                            {
+                                <div class="opinion-item border-bottom pb-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="fw-bold mb-1">
+                                                <i class="bi bi-person-circle text-primary me-2"></i>
+                                                @opinion.NombreUsuario @opinion.ApellidoUsuario
+                                            </h6>
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar3 me-1"></i>
+                                                @opinion.FechaOpinion.ToString("dd/MM/yyyy HH:mm")
+                                            </small>
+                                        </div>
+                                        <div class="text-warning">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= opinion.Calificacion)
+                                                {
+                                                    <i class="bi bi-star-fill"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <p class="mb-0">@opinion.Comentario</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Aún no hay opiniones para este paquete. ¡Sé el primero en compartir tu experiencia!
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Formulario para Agregar Opinión -->
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-chat-left-text me-2"></i>Comparte tu Experiencia
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="AgregarOpinion" method="post">
+                            <input type="hidden" asp-for="NuevaOpinion.PaqueteTuristicoId" />
+                            
+                            <div class="mb-3">
+                                <label asp-for="NuevaOpinion.Calificacion" class="form-label fw-bold">
+                                    <i class="bi bi-star me-1"></i>Calificación
+                                </label>
+                                <div class="rating-input">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        var starId = $"star{i}";
+                                        <input type="radio" 
+                                               asp-for="NuevaOpinion.Calificacion" 
+                                               value="@i" 
+                                               id="@starId" 
+                                               class="rating-star" />
+                                        <label for="@starId" class="star-label">
+                                            <i class="bi bi-star-fill"></i>
+                                        </label>
+                                    }
+                                </div>
+                                <span asp-validation-for="NuevaOpinion.Calificacion" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="NuevaOpinion.Comentario" class="form-label fw-bold">
+                                    <i class="bi bi-chat-quote me-1"></i>Comentario
+                                </label>
+                                <textarea asp-for="NuevaOpinion.Comentario" 
+                                          class="form-control" 
+                                          rows="4" 
+                                          placeholder="Cuéntanos sobre tu experiencia con este paquete turístico..."></textarea>
+                                <span asp-validation-for="NuevaOpinion.Comentario" class="text-danger"></span>
+                                <div class="form-text">
+                                    Mínimo 10 caracteres, máximo 1000 caracteres
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-send me-2"></i>Enviar Opinión
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center py-4">
+                        <i class="bi bi-lock text-muted mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="fw-bold mb-3">¿Quieres compartir tu opinión?</h5>
+                        <p class="text-muted mb-3">Inicia sesión para dejar tu comentario y calificación sobre este paquete</p>
+                        <a href="/Account/Login?returnUrl=@Url.Action("Details", new { id = Model.Paquete.Id })" 
+                           class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                        </a>
+                        <a href="/Account/Register" class="btn btn-outline-primary ms-2">
+                            <i class="bi bi-person-plus me-2"></i>Registrarse
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <!-- Sidebar con Precio y Reserva -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <span class="text-muted d-block">Precio por persona</span>
+                        <h2 class="text-primary fw-bold mb-0">S/ @Model.Paquete.PrecioPorPersona.ToString("N2")</h2>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Reservas" asp-action="Crear" asp-route-paqueteId="@Model.Paquete.Id" 
+                           class="btn btn-primary btn-lg">
+                            <i class="bi bi-calendar-check me-2"></i>Reservar Ahora
+                        </a>
+                        <button type="button" class="btn btn-outline-secondary">
+                            <i class="bi bi-heart me-2"></i>Agregar a Favoritos
+                        </button>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h6 class="fw-bold mb-3">Detalles del Viaje</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Alojamiento incluido
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Guía turístico profesional
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Transporte privado
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Seguro de viaje
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="small text-muted mb-2">¿Tienes preguntas?</p>
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-chat-dots me-1"></i>Contactar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <style>
+        .text-justify {
+            text-align: justify;
+        }
+        
+        .opinion-item:last-child {
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Estilos para el sistema de calificación por estrellas */
+        .rating-input {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            font-size: 2rem;
+        }
+        
+        .rating-star {
+            display: none;
+        }
+        
+        .star-label {
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+            margin: 0 2px;
+        }
+        
+        .star-label:hover,
+        .star-label:hover ~ .star-label,
+        .rating-star:checked ~ .star-label {
+            color: #ffc107;
+        }
+        
+        .rating-star:checked ~ .star-label {
+            color: #ffc107;
+        }
+    </style>
+}

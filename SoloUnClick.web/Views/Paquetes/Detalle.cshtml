@@ -1,0 +1,158 @@
+@model SoloUnClick.Domain.Entities.PaqueteTuristico
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+
+<div class="container my-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Paquetes" asp-action="Index">Paquetes</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Nombre</li>
+        </ol>
+    </nav>
+    
+    <!-- Contenido Principal -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Imagen Principal -->
+            <div class="card mb-4 shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.RutaImagenPrincipal))
+                {
+                    <img src="@Model.RutaImagenPrincipal" class="card-img-top" alt="@Model.Nombre" style="height: 450px; object-fit: cover;">
+                }
+                else
+                {
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 450px;">
+                        <i class="bi bi-image text-secondary" style="font-size: 8rem;"></i>
+                    </div>
+                }
+            </div>
+            
+            <!-- Información del Paquete -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge bg-primary mb-2">@Model.TipoViaje</span>
+                            <h1 class="fw-bold mb-0">@Model.Nombre</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-geo-alt text-danger fs-4 me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Ubicación</small>
+                                    <strong>@Model.Ubicacion</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-map text-success fs-4 me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Región</small>
+                                    <strong>@Model.Region</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event text-info fs-4 me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Duración</small>
+                                    <strong>@Model.DuracionDias días</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4 class="fw-bold mb-3">Descripción</h4>
+                    <p class="text-justify">@Model.DescripcionDetallada</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar con Precio y Reserva -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <span class="text-muted d-block">Precio por persona</span>
+                        <h2 class="text-primary fw-bold mb-0">S/ @Model.PrecioPorPersona.ToString("N2")</h2>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="alert('Funcionalidad de reserva próximamente')">
+                            <i class="bi bi-calendar-check me-2"></i>Reservar Ahora
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary">
+                            <i class="bi bi-heart me-2"></i>Agregar a Favoritos
+                        </button>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h6 class="fw-bold mb-3">Detalles del Viaje</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Alojamiento incluido
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Guía turístico profesional
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Transporte privado
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Seguro de viaje
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="small text-muted mb-2">¿Tienes preguntas?</p>
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-chat-dots me-1"></i>Contactar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sección de Opiniones (placeholder) -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-4">
+                        <i class="bi bi-star-fill text-warning me-2"></i>Opiniones de Viajeros
+                    </h4>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Próximamente podrás ver las opiniones de otros viajeros.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .text-justify {
+            text-align: justify;
+        }
+    </style>
+}
