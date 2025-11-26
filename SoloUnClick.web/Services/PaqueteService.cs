@@ -5,15 +5,28 @@ using SoloUnClick.web.Services.Exceptions;
 
 namespace SoloUnClick.web.Services;
 
+/// <summary>
+/// Servicio para gestionar operaciones relacionadas con paquetes turísticos.
+/// </summary>
 public class PaqueteService
 {
     private readonly IGenericRepository<PaqueteTuristico> _paqueteRepository;
 
+    /// <summary>
+    /// Inicializa una nueva instancia del servicio de paquetes.
+    /// </summary>
+    /// <param name="paqueteRepository">Repositorio para acceder a los paquetes turísticos.</param>
     public PaqueteService(IGenericRepository<PaqueteTuristico> paqueteRepository)
     {
         _paqueteRepository = paqueteRepository;
     }
 
+    /// <summary>
+    /// Busca paquetes turísticos disponibles según los criterios del filtro.
+    /// </summary>
+    /// <param name="filtro">Filtro con rango de fechas y presupuesto máximo.</param>
+    /// <returns>Lista de paquetes que cumplen con los criterios de búsqueda.</returns>
+    /// <exception cref="FiltroInvalidoException">Se lanza cuando la fecha de inicio es posterior a la fecha de fin.</exception>
     public async Task<List<PaqueteResumenDto>> BuscarOportunidadesAsync(FiltroBusquedaDto filtro)
     {
         // Validación del filtro
