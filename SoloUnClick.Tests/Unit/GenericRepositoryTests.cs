@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SoloUnClick.Domain.Entities;
 using SoloUnClick.Infrastructure.Data;
 using SoloUnClick.Infrastructure.Repositories;
+using Xunit;
 
 namespace SoloUnClick.Tests.Unit;
 

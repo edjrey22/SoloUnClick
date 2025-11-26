@@ -15,26 +15,31 @@ public class PaqueteTuristico
     public string RutaImagenPrincipal { get; set; } = string.Empty;
     
     /// <summary>
-    /// Número de plazas disponibles para este paquete
+    /// Nï¿½mero de plazas disponibles para este paquete
     /// </summary>
     public int PlazasDisponibles { get; set; } = 20;
     
     /// <summary>
-    /// Indica si el paquete está activo y disponible para reserva
+    /// Indica si el paquete estï¿½ activo y disponible para reserva
     /// </summary>
     public bool Activo { get; set; } = true;
     
     /// <summary>
-    /// Tags separados por comas para facilitar búsquedas (ej: "aventura,montaña,trekking")
+    /// Tags separados por comas para facilitar bï¿½squedas (ej: "aventura,montaï¿½a,trekking")
     /// </summary>
     public string Tags { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Fecha de inicio del paquete turÃ­stico
+    /// </summary>
+    public DateTime FechaInicio { get; set; }
 
-    // Navegación
+    // Navegaciï¿½n
     public ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
     public ICollection<Opinion> Opiniones { get; set; } = new List<Opinion>();
     
     /// <summary>
-    /// Calcula la calificación promedio basada en las opiniones
+    /// Calcula la calificaciï¿½n promedio basada en las opiniones
     /// </summary>
     public double ObtenerCalificacionPromedio()
     {

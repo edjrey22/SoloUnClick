@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SoloUnClick.Domain.Enums;
 using SoloUnClick.Domain.Entities;
 using SoloUnClick.Infrastructure.Data;
+using Xunit;
 
 namespace SoloUnClick.Tests.Integration;
 
